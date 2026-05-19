@@ -125,3 +125,97 @@ Java中线程安全的容器主要包括 Vector 、 HashTable 、 Collections.sy
 ### HashMap
 - Key和Value:允许为null
 - 原因:HashMap是最常用的非线程安全的映射表实现。它==允许null作为键或值==，主要是为了提高灵活性。例如，允许null作为键可以方便地表示“不存在“或“未知”的状态;允许null作为值则可以在某些场景下用于标记某些特定的状态。但是，需要注意的是，HashMap中==只能有一个键为null的条目，而值为null的条目则可以有多个==。
+# List
+## ArrayList和Array的区别
+1. 动态vs固定大小
+- Array:数组是固定大小的数据结构。一旦创建，其大小就无法改变。如果你需要增加或减少数组中的元素数量，你需要创建一个新的数组并将原有数组中的元素复制过去。
+- ArrayList:ArrayList 是一个可动态调整大小的列表。它可以随着元素的增加或减少自动调整其容量，因此不需要手动管理大小。
+2. 泛型支持
+- Array:原生的数组不支持泛型，但是在Java 5之后，你可以使用泛型来指定数组中的元素类型，但这主要是编译时的检查。
+- ArrayList:ArrayList支持泛型，可以指定列表中元素的类型，这样可以避免在运行时进行类型转换，并且提高了类型安全。
+3. 方法和功能
+- Array:数组本身没有提供很多方法来操作其内容。你需要手动实现添加、删除、搜索等功能。
+- ArrayList:ArrayList 提供了大量的方法来操作列表，如 add()、remove()、indexof()、contains()等，使得操作列表变得更加方便。
+4. 内存分配
+- Array:数组在创建时分配一块连续的内存空间。
+- ArrayList:ArrayList 使用一个动态数组来存储元素，当需要更多空间时，它会创建一个新的更大的数组并将旧数组中的元素复制过来。
+## ArrayList 和 LinkedList 的区别
+![[Pasted image 20260519161430.png]]
+1. 底层数据结构
+- ArrayList:基于动态数组实现。
+- LinkedList:基于双向链表实现。
+2. 随机访问
+- ArrayList:支持快速的随机访问(0(1))，因为你可以通过索引直接访问元素。
+- LinkedList:不支持快速的随机访问(O(n))，因为需要从头节点开始遍历到指定位置。
+3. 插入和删除
+- ArrayList:插入和删除操作相对较慢(O(n)，特别是在列表中间位置时，因为需要移动后续元素。
+- LinkedList:插入和删除操作非常快(O(1))，因为你只需要改变前后节点的指针即可。
+4. 内存占用
+- ArrayList:内存占用相对较少，因为只需存储元素本身。
+- LinkedList:内存占用较多，因为每个节点不仅存储元素，还需要存储前后节点的引用。
+## ArrayList的扩容机制
+![[Pasted image 20260519161617.png]]
+ArrayList 在创建时会有一个初始容量。当添加的元素超过了当前容量时，ArrayList 会自动扩容。扩容的具体机制如下:
+1. 初始容量:默认情况下，ArrayList 的初始容量为10。你可以通过构造函数指定一个初始容量。
+2. 扩容策略:当ArrayList的大小超过其容量时，它会创建一个新的数组，并将旧数组中的所有元素复制到新数组中。新的数组的容量通常是旧容量的1.5倍(即增加50%)
+3. 扩容过程
+- ensureCapacityInternal 方法用于确保容量足够。
+- grow方法负责实际的扩容操作。
+- 新的数组会通过 Arrays.copyof 方法创建，并将==旧数组中的元素复制到新数组==中。0
+- 最后，ArrayList ==的引用会指向新的数组==。
+# HashSet、LinkedHashSet、TreeSet 的区别
+## HashSet
+- 底层数据结构:Hashset 是基于哈希表实现的。它使用哈希码来确定元素的位置，并通过哈希表来存储元素。Hashset 内部使用了一个HashMap来存储元素，其中元素作为键(key)，值为PRESENT(一个静态对象)。
+- 特点:HashSet 不允许重复元素，并且不保证元素的任何特定顺序。
+- 性能:插入、删除和查找操作的平均时间复杂度为0(1)。
+- 应用场景:当需要==快速判断元素是否存在==，且不关心元素顺序时，可以选择使用 Hashset。
+## LinkedHashSet
+- 底层数据结构:LinkedHashset 是基于哈希表和双向链表实现的。它在 ==Hashset的基础上增加了双向链表==来维护元素的插入顺序。
+- 特点:LinkedHashset 也不允许重复元素，但它保证了元素的插入顺序(即元素按照插入的顺序排列)
+- 性能:插入、删除和查找操作的平均时间复杂度接近O(1)，但由于需要维护链表，性能略低于 Hashset
+- 应用场景:当需要==保持元素的插入顺序，并且需要快速判断元素是否存在==时，可以选择使用LinkedHashSet
+## TreeSet
+- 底层数据结构:Treeset 是基于红黑树实现的。它提供了排序功能，并通过红黑树来存储元素。
+- 特点:TreeSet也不允许重复元素，并且元素按照自然顺序或通过比较器排序。
+- 性能:插入、删除和查找操作的时间复杂度为0(logn)。
+- 应用场景:当==需要对元素进行排序，并且需要快速判断元素==是否存在时，可以选择使用Treeset
+
+# Map相关
+## HashMap 和HashSet的区别
+![[Pasted image 20260519162133.png]]
+1. 数据结构
+- HashMap:HashMap是一个键值对映射容器，它使用哈希表来存储键值对。每个键值对由一个键(key)和一个值(value)组成。
+- HashSet:Hashset是一个集合容器，它不允许重复元素，并且不保证元素的顺序。Hashset 内部使用了一个 HashMap来存储元素，其中元素作为键(key)，值为PRESENT。
+2. 元素
+- HashMap:HashMap 存储的是键值对，每个键必须是唯一的，但值可以重复。
+- HashSet:HashSet存储的是单一元素，不允许重复元素。
+3. 键值对vs单一元素
+- HashMap:存储的是键值对，每个键值对由一个键和一个值组成。
+- HashSet:存储的是单一元素，每个元素都是唯一的。
+4. 存储方式
+- HashMap:键值对存储在哈希表中，键用于哈希计算。
+- HashSet:元素存储在哈希表中，元素自身用于哈希计算。
+## HashMap 和 Hashtable 的区别
+HashMap和Hashtable是Java中常用的哈希表实现，但两者之间有几个关键的区别:
+- 线程安全性:Hashtable 是线程安全的，它内部的方法使用了synchronized 关键字来确保多线程环境下的安全性。而HashMap并没有提供同步机制，因此在多线程环境中使用时需要手动同步。
+- 允许null键和null 值:HashMap 允许一个null键和多个nul1值,而Hashtable 不允许 null键或null值。
+- 历史和过时的方法:Hashtable 出现在早期的JDK版本中，并且包含了一些过时的方法，如clone()和contains()。而HashMap 在JDK1.2中引入，没有这些过时的方法，使用起来更加现代。
+- 性能:由于 Hashtable 的方法是同步的，使用synchronized加锁，因此在多线程环境中的性能较低。而HashMap 在单线程环境中性能更高。
+## HashMap 和 ConcurrentHashMap 的区别
+![[Pasted image 20260519162513.png]]
+HashMap和ConcurrentHashMap 都是哈希表实现，但ConcurrentHashMap 是专门为高并发环境设计的:
+- 线程安全性:HashMap 是非线程安全的，而ConcurrentHashMap 是线程安全的，它使用了分割锁技术来实现并发性能。
+- 性能:在==单线程环境中，HashMap的性能较高，但是多线程环境下会出现并发问题==。但在==多线程环境中ConcurrentHashMap 由于其分块锁技术，能够提供更好的并发性能==。
+- 内部实现:HashMap使用一个没有加锁，而ConcurrentHashMap将哈希表分成多个段(segments)，每个段有自己的锁，这样可以并发地对不同段进行操作。
+- 方法:ConcurrentHashMap 提供了更多的并发操作方法，如 putIfAbsent，remove 等，这些方法在多线程环境中更有优势。
+## HashMap如何解决哈希冲突的
+![[Pasted image 20260519162807.png]]
+HashMap通过链表来解决哈希冲突，当多个元素的哈希值相同，导致它们映射到同一个桶(bucket)时，HashMap会将这些元素放在一个链表中。每个桶就是一个链表的头部，而链表中的每个节点存储一个键值对。
+## HashMap为什么线程不安全?如何实现线程安全?
+HashMap是非线程安全的，主要原因在于它的扩容机制和内部操作==没有进行同步==。当==多个线程同时进行写操作==时，可能会出现以下问题:
+- 并发修改异常:多个线程同时进行写操作时，可能会导致HashMap的内部结构变得不一致，引发ConcurrentModificationException.
+- 数据不一致:如果多个线程同时修改HashMap，可能会导致数据不一致。
+为了实现线程安全，可以采取以下几种方式:
+- 使用 ==synchronized 关键字==:可以在方法上加synchronized 关键字，但这会影响性能。
+- 使用 ==Collections.synchronizedMap== :可以将 HashMap 包装成一个线程安全的映射(对所有方法加同步锁)。
+- 使用==ConcurrentHash==Map:ConcurrentHashMap 是专门为高并发环境设计的线程安全映射。
